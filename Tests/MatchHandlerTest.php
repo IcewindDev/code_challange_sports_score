@@ -1,0 +1,46 @@
+<?php
+
+namespace Tests;
+
+use Models\Match;
+use Models\Team;
+use Services\MatchHandler;
+
+class MatchHandlerTest
+{
+    private MatchHandler $matchHandler;
+
+    public function __construct(MatchHandler $matchHandler)
+    {
+        $this->matchHandler = $matchHandler;
+    }
+
+    public function testStartGameFail1()
+    {
+        $homeTeam = new Team();
+        $homeTeam->setId(1);
+
+        $awayTeam = new Team();
+        $awayTeam->setId(1);
+
+        $response = $this->matchHandler->startGame($homeTeam, $awayTeam);
+
+        \assertNotInstanceOf(Match::class, $response);
+        \assertEquals(false, $response);
+    }
+
+    public function startGameFail2()
+    {
+        $homeTeam = new Team();
+        $homeTeam->setId(1)
+                 ->setStatus(Team::STATUS_PLAYING);
+
+        $awayTeam = new Team();
+        $awayTeam->setId(2)
+                 ->setStatus(Team::STATUS_AVAILABLE);
+
+        $response = $this->matchHandler->startGame($homeTeam, $awayTeam);
+
+        \assertEquals(false, $response);
+    }
+}

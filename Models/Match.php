@@ -59,4 +59,40 @@ class Match
 
         return $this;
     }
+
+    /**
+     * @return int
+     */
+    public function getHomeTeamScore(): int
+    {
+        return $this->homeTeamScore;
+    }
+
+    /**
+     * @param int $homeTeamScore
+     */
+    public function setHomeTeamScore(int $homeTeamScore): self
+    {
+        $this->homeTeamScore = $homeTeamScore;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAwayTeamScore(): int
+    {
+        return $this->awayTeamScore;
+    }
+
+    /**
+     * @param int $awayTeamScore
+     */
+    public function setAwayTeamScore(int $awayTeamScore): self
+    {
+        $this->awayTeamScore = $awayTeamScore;
+
+        return $this;
+    }
 }
