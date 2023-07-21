@@ -5,9 +5,9 @@ namespace Models;
 class Team
 {
     /**
-     * @var string
+     * @var int
      */
-    private string $id;
+    private int $id;
 
     /**
      * @var string
@@ -16,10 +16,14 @@ class Team
 
     // no other properties needed for now
 
+    public function __construct(int $id){
+        $this->id = $id;
+    }
+
     /**
-     * @return string
+     * @return int
      */
-    public function getId(): string
+    public function getId(): int
     {
         return $this->id;
     }
