@@ -184,5 +184,31 @@ class MatchHandlerTest
         \assertEquals(MatchHandler::ERROR_MATCH_FINISHED, $response[Constants::MESSAGE]);
     }
 
+    public function testFinishGameFail1Ok()
+    {
+        $homeTeam = new Team();
+        $homeTeam->setId(1)
+                 ->startGame();
+
+        // TODO use repo for saving changes
+
+        $awayTeam = new Team();
+        $awayTeam->setId(2)
+                 ->startGame();
+        // TODO use repo for saving changes
+
+        $match = new Match();
+        $match->setHomeTeam(1)
+              ->setAwayTeam(2)
+              ->startGame();
+
+        $match = $this->matchRepo->saveMatch($match);
+
+        $response = $this->matchHandler->finishGame($match->getId());
+
+        \assertEquals(true, $response[Constants::RESULT]);
+        \assertInstanceOf(Match::class, $response[Constants::MATCH]);
+    }
+
     // TODO add test case for no match in progress,
 }
