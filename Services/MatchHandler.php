@@ -2,10 +2,10 @@
 
 namespace Services;
 
+use Helpers\Constants;
 use Repositories\MatchRepository;
 use Models\Match;
 use Models\Team;
-
 
 class MatchHandler
 {
@@ -38,12 +38,18 @@ class MatchHandler
 
             $this->matchRepo->saveMatch($match);
 
-            return $match;
-        }catch (\Exception $exception){
+            return [
+                Constants::RESULT = > true,
+                Constants::MATCH => $match,
+            ];
+        } catch (\Exception $exception) {
             // exception should be logged
+            // create service for logging errors
+            return [
+                Constants::RESULT = > false,
+                Constants::MESSAGE => $exception->getMessage(),
+            ]
         }
-
-        return false;
     }
 
     /**
@@ -72,6 +78,7 @@ class MatchHandler
      */
     private function validateMatch(Team $homeTeam, Team $awayTeam)
     {
+        // could be included here validation for finding match as well
         if ($homeTeam->getId() === $awayTeam->getId()) {
             throw new \Exception(self::ERROR_PLAY_ITSELF);
         }

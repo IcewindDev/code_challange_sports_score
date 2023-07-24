@@ -86,4 +86,20 @@ class Team
 
         return $this;
     }
+
+    /**
+     * @return $this
+     */
+    public function startGame()
+    {
+        return $this->setStatus(self::STATUS_PLAYING);
+    }
+
+    /**
+     * @return $this
+     */
+    public function endGame()
+    {
+        return $this->setStatus(self::STATUS_AVAILABLE);
+    }
 }

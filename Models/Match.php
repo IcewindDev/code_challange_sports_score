@@ -95,4 +95,15 @@ class Match
 
         return $this;
     }
+
+    /**
+     * @return $this
+     */
+    public function startGame()
+    {
+        $this->setHomeTeamScore(0)
+             ->setAwayTeamScore(0);
+
+        return $this;
+    }
 }
