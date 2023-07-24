@@ -23,7 +23,7 @@ class MatchRepository
 
     /**
      * @param Match $match
-     * @return void
+     * @return Match
      */
     public function saveMatch(Match $match)
     {
@@ -32,7 +32,7 @@ class MatchRepository
 
     /**
      * @param Match $match
-     * @return void
+     * @return Match
      */
     public function updateMatch(Match $match)
     {

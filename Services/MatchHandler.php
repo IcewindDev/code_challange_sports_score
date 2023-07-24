@@ -120,6 +120,10 @@ class MatchHandler
         }
     }
 
+    public function getMatchesSummary(){
+        // TODO add logic for getting matches
+    }
+
     /**
      * @param Team $homeTeam
      * @param Team $awayTeam

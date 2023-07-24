@@ -228,6 +228,59 @@ class MatchHandlerTest
         \assertInstanceOf(Match::class, $response[Constants::MATCH]);
     }
 
-    // TODO add test case for no match in progress,
+    public function testGetMatchesSummaryNoResults()
+    {
+        $response = $this->matchHandler->getMatchesSummary();
+
+        // there should be no matches in the system
+        \assertEquals(true, $response[Constants::RESULT]);
+        \assertEmpty($response[Constants::SUMMARY]);
+    }
+
+    public function testGetMatchesSummaryResult()
+    {
+        $homeTeam = new Team();
+        $homeTeam->setId(1)
+                 ->setName('Spain')
+                 ->startGame();
+
+        // TODO use repo for saving changes
+
+        $awayTeam = new Team();
+        $awayTeam->setId(2)
+                 ->setName('Brazil')
+                 ->startGame();
+        // TODO use repo for saving changes
+
+        $match = new Match();
+        $match->setHomeTeam(1)
+              ->setAwayTeam(2)
+              ->setHomeTeamScore(10)
+              ->setAwayTeamScore(2)
+              ->startGame();
+
+        $match = $this->matchRepo->saveMatch($match);
+
+        $response = $this->matchHandler->getMatchesSummary();
+
+        // there should be no matches in the system
+        \assertEquals(true, $response[Constants::RESULT]);
+        \assertEquals(
+            [
+                [
+                    "home" => [
+                        "name"  => "Spain",
+                        "score" => 10,
+                    ],
+                    "away" => [
+                        "name"  => "Brazil",
+                        "score" => 2,
+                    ],
+                ],
+            ],
+            $response[Constants::SUMMARY]
+        );
+    }
+
     // TODO test case for TEAM MISSING on FINISH or UPDATE (team gets deleted for whatever reason)
 }
