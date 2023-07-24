@@ -11,6 +11,7 @@ class MatchHandler
 {
     public const ERROR_PLAY_ITSELF        = "A team cannot play itself";
     public const ERROR_TEAM_NOT_AVAILABLE = "One of the teams is not available for a match";
+    public const ERROR_SCORE_NEGATIVE     = "Score cannot be negative";
     public const ERROR_WRONG_SCORE        = "New score cannot be lower than previous one";
     /**
      * @var MatchRepository
@@ -39,14 +40,14 @@ class MatchHandler
             $this->matchRepo->saveMatch($match);
 
             return [
-                Constants::RESULT = > true,
+                    Constants::RESULT = > true,
                 Constants::MATCH => $match,
             ];
         } catch (\Exception $exception) {
             // exception should be logged
             // create service for logging errors
             return [
-                Constants::RESULT = > false,
+                    Constants::RESULT = > false,
                 Constants::MESSAGE => $exception->getMessage(),
             ]
         }

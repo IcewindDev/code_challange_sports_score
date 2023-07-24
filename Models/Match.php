@@ -4,6 +4,7 @@ namespace Models;
 
 class Match
 {
+    private string $id;
     /**
      * @var int
      */
@@ -103,6 +104,24 @@ class Match
     {
         $this->setHomeTeamScore(0)
              ->setAwayTeamScore(0);
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getId(): string
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param string $id
+     */
+    public function setId(string $id): self
+    {
+        $this->id = $id;
 
         return $this;
     }
