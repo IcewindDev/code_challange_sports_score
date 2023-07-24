@@ -13,6 +13,7 @@ class MatchHandler
     public const ERROR_TEAM_NOT_AVAILABLE = "One of the teams is not available for a match";
     public const ERROR_SCORE_NEGATIVE     = "Score cannot be negative";
     public const ERROR_WRONG_SCORE        = "New score cannot be lower than previous one";
+    public const ERROR_MATCH_FINISHED     = "Match ended and cannot be updated";
     /**
      * @var MatchRepository
      */

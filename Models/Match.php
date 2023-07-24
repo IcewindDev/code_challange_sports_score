@@ -4,6 +4,8 @@ namespace Models;
 
 class Match
 {
+    public const STATUS_ONGOING  = 'ongoing';
+    public const STATUS_FINISHED = 'finished';
     private string $id;
     /**
      * @var int
@@ -24,6 +26,8 @@ class Match
      * @var int
      */
     private int $awayTeamScore = 0;
+
+    private string $status;
 
     /**
      * @return int
@@ -122,6 +126,24 @@ class Match
     public function setId(string $id): self
     {
         $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param string $status
+     */
+    public function setStatus(string $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

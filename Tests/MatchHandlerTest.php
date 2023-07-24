@@ -102,4 +102,23 @@ class MatchHandlerTest
         \assertEquals(false, $response[Constants::RESULT]);
         \assertEquals(MatchHandler::ERROR_MATCH_NOT_FOUND, $response[Constants::MESSAGE]);
     }
+
+    public function testUpdateScoreFail3()
+    {
+        $homeTeam = new Team();
+        $homeTeam->setId(1)
+                 ->setStatus(Team::STATUS_PLAYING);
+
+        $awayTeam = new Team();
+        $awayTeam->setId(2)
+                 ->setStatus(Team::STATUS_AVAILABLE);
+
+        $match = new Match();
+        $match->setStatus(Match::STATUS_FINISHED);
+
+        $response = $this->matchHandler->updateScore($match, 1, 0);
+
+        \assertEquals(false, $response[Constants::RESULT]);
+        \assertEquals(MatchHandler::ERROR_MATCH_FINISHED, $response[Constants::MESSAGE]);
+    }
 }
