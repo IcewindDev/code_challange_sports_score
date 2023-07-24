@@ -150,4 +150,12 @@ class MatchHandlerTest
         \assertEquals(true, $response[Constants::RESULT]);
         \assertInstanceOf(Match::class, $response[Constants::MATCH]);
     }
+
+    public function testFinishGameFail1()
+    {
+        $response = $this->matchHandler->finishGame(123);
+
+        \assertEquals(false, $response[Constants::RESULT]);
+        \assertEquals(MatchHandler::ERROR_MATCH_NOT_FOUND, $response[Constants::MESSAGE]);
+    }
 }

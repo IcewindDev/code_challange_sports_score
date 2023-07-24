@@ -87,6 +87,10 @@ class MatchHandler
         }
     }
 
+    public function finishGame(string $matchId){
+
+    }
+
     /**
      * @param Team $homeTeam
      * @param Team $awayTeam

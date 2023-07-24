@@ -21,3 +21,4 @@ Before we start...
 
     + Main logic located in Service\MatchHandler.php
     + Storage logic not implemented
+    + Error logging not implemented (it would be best to create custom exceptions)
