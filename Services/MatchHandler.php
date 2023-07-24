@@ -14,6 +14,7 @@ class MatchHandler
     public const ERROR_SCORE_NEGATIVE     = "Score cannot be negative";
     public const ERROR_WRONG_SCORE        = "New score cannot be lower than previous one";
     public const ERROR_MATCH_FINISHED     = "Match ended and cannot be updated";
+    public const ERROR_MATCH_NOT_FOUND    = "Match not found";
     /**
      * @var MatchRepository
      */
@@ -27,7 +28,7 @@ class MatchHandler
     /**
      * @param Team $homeTeam
      * @param Team $awayTeam
-     * @return false|Match
+     * @return array
      */
     public function startGame(Team $homeTeam, Team $awayTeam)
     {
@@ -41,35 +42,49 @@ class MatchHandler
             $this->matchRepo->saveMatch($match);
 
             return [
-                    Constants::RESULT = > true,
-                Constants::MATCH => $match,
+                Constants::RESULT => true,
+                Constants::MATCH  => $match,
             ];
         } catch (\Exception $exception) {
-            // exception should be logged
-            // create service for logging errors
+            // TODO log exception
+            // TODO create service for logging errors
             return [
-                    Constants::RESULT = > false,
+                Constants::RESULT  => false,
                 Constants::MESSAGE => $exception->getMessage(),
             ]
         }
     }
 
     /**
-     * @param Match $match
-     * @param int   $homeTeamScore
-     * @param int   $awayTeamScore
-     * @return Match
+     * @param string $matchId
+     * @param int    $homeNewScore
+     * @param int    $awayNewScore
+     * @return array
      */
-    public function updateScore(Match $match, int $homeTeamScore, int $awayTeamScore)
+    public function updateScore(string $matchId, int $homeNewScore, int $awayNewScore)
     {
-        // TODO refactor
+        try {
+            $match = $this->matchRepo->find($matchId);
 
-        $match->setHomeTeamScore($homeTeamScore)
-              ->setAwayTeamScore($awayTeamScore);
+            $this->validateScoreUpdate($match, $homeNewScore, $awayNewScore);
 
-        $this->matchRepo->updateMatch($match);
+            $match->setHomeTeamScore($homeNewScore)
+                  ->setAwayTeamScore($awayNewScore);
 
-        return $match;
+            $this->matchRepo->updateMatch($match);
+
+            return [
+                Constants::RESULT => true,
+                Constants::MATCH  => $match,
+            ];
+        } catch (\Exception $exception) {
+            // TODO log exception
+            // TODO create service for logging errors
+            return [
+                Constants::RESULT  => true,
+                Constants::MESSAGE => $exception->getMessage(),
+            ];
+        }
     }
 
     /**
@@ -91,17 +106,41 @@ class MatchHandler
     }
 
     /**
-     * @param int $matchScore
+     * @param Match|null $match
+     * @param int        $newHomeScore
+     * @param int        $newAwayScore
+     * @return void
+     * @throws \Exception
+     */
+    private function validateScoreUpdate(?Match $match, int $newHomeScore, int $newAwayScore)
+    {
+        if (null === $match) {
+            throw new \Exception(self::ERROR_MATCH_NOT_FOUND);
+        }
+
+        if (Match::STATUS_FINISHED === $match->getStatus()) {
+            throw new \Exception(self::ERROR_MATCH_FINISHED);
+        }
+
+        $this->validateScore($match->getHomeTeamScore(), $newHomeScore);
+        $this->validateScore($match->getAwayTeamScore(), $newAwayScore);
+    }
+
+    /**
+     * @param int $oldScore
      * @param int $newScore
      * @return void
      * @throws \Exception
      */
-    private function validateScore(int $matchScore, int $newScore)
+    private function validateScore(int $oldScore, int $newScore)
     {
+        if ($newScore < 0) {
+            throw new \Exception(self::ERROR_SCORE_NEGATIVE);
+        }
         //validation for score => you should not be able to "unscore"
         // not sure about the football rules if you can deny a goal after a while and not right away
         // then validating score does not make any sense
-        if ($newScore < $matchScore) {
+        if ($newScore < $oldScore) {
             throw new \Exception(self::ERROR_WRONG_SCORE);
         }
     }

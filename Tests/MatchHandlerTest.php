@@ -5,15 +5,18 @@ namespace Tests;
 use Helpers\Constants;
 use Models\Match;
 use Models\Team;
+use Repositories\MatchRepository;
 use Services\MatchHandler;
 
 class MatchHandlerTest
 {
-    private MatchHandler $matchHandler;
+    private MatchHandler    $matchHandler;
+    private MatchRepository $matchRepo;
 
-    public function __construct(MatchHandler $matchHandler)
+    public function __construct(MatchHandler $matchHandler, MatchRepository $matchRepo)
     {
         $this->matchHandler = $matchHandler;
+        $this->matchRepo    = $matchRepo;
     }
 
     public function testStartGameFail1()
@@ -120,5 +123,31 @@ class MatchHandlerTest
 
         \assertEquals(false, $response[Constants::RESULT]);
         \assertEquals(MatchHandler::ERROR_MATCH_FINISHED, $response[Constants::MESSAGE]);
+    }
+
+    public function testUpdateScoreOk()
+    {
+        $homeTeam = new Team();
+        $homeTeam->setId(1)
+                 ->startGame();
+
+        // TODO use repo for saving changes
+
+        $awayTeam = new Team();
+        $awayTeam->setId(2)
+                 ->startGame();
+        // TODO use repo for saving changes
+
+        $match = new Match();
+        $match->setHomeTeam(1)
+              ->setAwayTeam(2)
+              ->startGame();
+
+        $this->matchRepo->saveMatch($match);
+
+        $response = $this->matchHandler->updateScore($match, 1, 0);
+
+        \assertEquals(true, $response[Constants::RESULT]);
+        \assertInstanceOf(Match::class, $response[Constants::MATCH]);
     }
 }

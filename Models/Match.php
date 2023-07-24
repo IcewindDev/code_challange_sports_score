@@ -106,7 +106,8 @@ class Match
      */
     public function startGame()
     {
-        $this->setHomeTeamScore(0)
+        $this->setStatus(self::STATUS_ONGOING)
+             ->setHomeTeamScore(0)
              ->setAwayTeamScore(0);
 
         return $this;

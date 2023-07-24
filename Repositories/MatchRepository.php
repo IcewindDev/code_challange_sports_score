@@ -12,10 +12,21 @@ class MatchRepository
     }
 
     /**
+     * @param string $id
+     * @return Match|null
+     */
+    public function find(string $id)
+    {
+        // TODO implement logic for finding match
+        // TODO must return null if not found
+    }
+
+    /**
      * @param Match $match
      * @return void
      */
-    public function saveMatch(Match $match){
+    public function saveMatch(Match $match)
+    {
         // logic for storing games
     }
 
@@ -23,7 +34,8 @@ class MatchRepository
      * @param Match $match
      * @return void
      */
-    public function updateMatch(Match $match){
+    public function updateMatch(Match $match)
+    {
         // logic for updating match in storage
     }
 }
