@@ -16,3 +16,8 @@ Before we start...
         - I will avoid using any external libraries which would do a better job at autoloading classes, data storing/mapping, writing unit test
     
     - I would assume that it would be better to use a language like node to handle any data real time using websockets, however, the current implementation will be in php
+
+# IMPORTANT
+
+    + Main logic located in Service\MatchHandler.php
+    + Storage logic not implemented
