@@ -26,7 +26,7 @@ class Team
      * @var string
      */
     private string $status;
-
+    //it would be nice to move this in a status handler service which will handle all entities
     // no other properties needed for now
 
     /**

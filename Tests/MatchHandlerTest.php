@@ -19,6 +19,8 @@ class MatchHandlerTest
         $this->matchRepo    = $matchRepo;
     }
 
+    //TODO create test case for validation of missing teams
+
     public function testStartGameFail1()
     {
         $homeTeam = new Team();
@@ -158,4 +160,29 @@ class MatchHandlerTest
         \assertEquals(false, $response[Constants::RESULT]);
         \assertEquals(MatchHandler::ERROR_MATCH_NOT_FOUND, $response[Constants::MESSAGE]);
     }
+
+    public function testFinishGameFail12()
+    {
+        $homeTeam = new Team();
+        $homeTeam->setId(1)
+                 ->startGame();
+
+        // TODO use repo for saving changes
+
+        $awayTeam = new Team();
+        $awayTeam->setId(2)
+                 ->startGame();
+        // TODO use repo for saving changes
+
+        $match = new Match();
+        $match->setHomeTeam(1)
+              ->setAwayTeam(2)
+              ->startGame();
+        $response = $this->matchHandler->finishGame(123);
+
+        \assertEquals(false, $response[Constants::RESULT]);
+        \assertEquals(MatchHandler::ERROR_MATCH_FINISHED, $response[Constants::MESSAGE]);
+    }
+
+    // TODO add test case for no match in progress,
 }

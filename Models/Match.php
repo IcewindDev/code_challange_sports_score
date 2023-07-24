@@ -27,7 +27,11 @@ class Match
      */
     private int $awayTeamScore = 0;
 
+    /**
+     * @var string
+     */
     private string $status;
+    //it would be nice to move this in a status handler service which will handle all entities
 
     /**
      * @return int

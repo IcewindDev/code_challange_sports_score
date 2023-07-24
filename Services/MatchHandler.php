@@ -99,6 +99,7 @@ class MatchHandler
      */
     private function validateMatch(Team $homeTeam, Team $awayTeam)
     {
+        //TODO add validation for missing teams
         // could be included here validation for finding match as well
         if ($homeTeam->getId() === $awayTeam->getId()) {
             throw new \Exception(self::ERROR_PLAY_ITSELF);
