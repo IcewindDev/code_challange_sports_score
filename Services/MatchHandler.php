@@ -3,6 +3,7 @@
 namespace Services;
 
 use Helpers\Constants;
+use Helpers\ResponseHelper;
 use Repositories\MatchRepository;
 use Models\Match;
 use Models\Team;
@@ -24,7 +25,7 @@ class MatchHandler
     public function __construct(MatchRepository $matchRepo, TeamRepository $teamRepo)
     {
         $this->matchRepo = $matchRepo;
-        $this->teamRepo = $teamRepo;
+        $this->teamRepo  = $teamRepo;
     }
 
     /**
@@ -97,7 +98,7 @@ class MatchHandler
             $awayTeam = $this->teamRepo->find($match->getAwayTeam()); // could be replaced with a relationship for easier handling
             $this->validateMatchFinish($match, $homeTeam, $awayTeam);
 
-            $match->endGame(); // sets status as finished
+            $match->endGame();                     // sets status as finished
             $this->matchRepo->updateMatch($match); // we could check if everything went well and only then proceed with team update
 
             $homeTeam->endGame();
@@ -120,8 +121,34 @@ class MatchHandler
         }
     }
 
-    public function getMatchesSummary(){
-        // TODO add logic for getting matches
+    public function getMatchesSummary()
+    {
+        $matches = $this->matchRepo->findBy([
+            Constants::STATUS => Match::STATUS_ONGOING,
+        ]); // should paginate
+
+        $summary = [];
+        //instead of loops we should a serializer
+        /** @var Match $match */
+        foreach ($matches as $match) {
+            $homeTeam  = $this->teamRepo->find($match->getHomeTeam());
+            $awayTeam  = $this->teamRepo->find($match->getAwayTeam());
+            $summary[] = [
+                Constants::HOME => [
+                    Constants::NAME  => $homeTeam->getName(),
+                    Constants::SCORE => $match->getHomeTeamScore(),
+                ],
+                Constants::AWAY => [
+                    Constants::NAME  => $awayTeam->getName(),
+                    Constants::SCORE => $match->getAwayTeamScore(),
+                ],
+            ];
+        }
+
+        return [
+            Constants::RESULT  => true,
+            Constants::SUMMARY => $summary,
+        ];
     }
 
     /**

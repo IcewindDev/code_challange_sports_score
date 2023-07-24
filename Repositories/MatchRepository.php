@@ -38,4 +38,14 @@ class MatchRepository
     {
         // logic for updating match in storage
     }
+
+    /**
+     * @param array $array
+     * @return array
+     */
+    public function findBy(array $array)
+    {
+        // TODO implement logic for query builder
+        // if no matches found return empty array
+    }
 }
