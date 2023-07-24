@@ -6,6 +6,7 @@ use Helpers\Constants;
 use Repositories\MatchRepository;
 use Models\Match;
 use Models\Team;
+use Repositories\TeamRepository;
 
 class MatchHandler
 {
@@ -20,9 +21,10 @@ class MatchHandler
      */
     private MatchRepository $matchRepo;
 
-    public function __construct(MatchRepository $matchRepo)
+    public function __construct(MatchRepository $matchRepo, TeamRepository $teamRepo)
     {
         $this->matchRepo = $matchRepo;
+        $this->teamRepo = $teamRepo;
     }
 
     /**
@@ -87,8 +89,35 @@ class MatchHandler
         }
     }
 
-    public function finishGame(string $matchId){
+    public function finishGame(string $matchId)
+    {
+        try {
+            $match    = $this->matchRepo->find($matchId);
+            $homeTeam = $this->teamRepo->find($match->getHomeTeam()); // could be replaced with a relationship for easier handling
+            $awayTeam = $this->teamRepo->find($match->getAwayTeam()); // could be replaced with a relationship for easier handling
+            $this->validateMatchFinish($match, $homeTeam, $awayTeam);
 
+            $match->endGame(); // sets status as finished
+            $this->matchRepo->updateMatch($match); // we could check if everything went well and only then proceed with team update
+
+            $homeTeam->endGame();
+            $awayTeam->endGame();
+
+            $this->teamRepo->updateTeam($homeTeam);
+            $this->teamRepo->updateTeam($awayTeam);
+
+            return [
+                Constants::RESULT => true,
+                Constants::MATCH  => $match,
+            ];
+        } catch (\Exception $exception) {
+            // TODO log exception
+            // TODO create service for logging errors
+            return [
+                Constants::RESULT  => true,
+                Constants::MESSAGE => $exception->getMessage(),
+            ];
+        }
     }
 
     /**
@@ -147,6 +176,18 @@ class MatchHandler
         // then validating score does not make any sense
         if ($newScore < $oldScore) {
             throw new \Exception(self::ERROR_WRONG_SCORE);
+        }
+    }
+
+    private function validateMatchFinish(?Match $match, Team $homeTeam, Team $awayTeam)
+    {
+        if (null === $match) {
+            throw new \Exception(self::ERROR_MATCH_NOT_FOUND);
+        }
+
+        // TODO validation for missing team
+        if (null === $homeTeam || null === $awayTeam) {
+            throw new \Exception(self::ERROR_TEAM_MISSING);
         }
     }
 }

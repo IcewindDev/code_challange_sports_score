@@ -118,6 +118,16 @@ class Match
     }
 
     /**
+     * @return $this
+     */
+    public function endGame()
+    {
+        $this->setStatus(self::STATUS_FINISHED);
+
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getId(): string

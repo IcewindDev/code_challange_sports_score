@@ -184,6 +184,24 @@ class MatchHandlerTest
         \assertEquals(MatchHandler::ERROR_MATCH_FINISHED, $response[Constants::MESSAGE]);
     }
 
+    public function testFinishGameFail13()
+    {
+        $homeTeam = new Team();
+        $homeTeam->setId(1)
+                 ->startGame();
+
+        // TODO use repo for saving changes
+
+        $match = new Match();
+        $match->setHomeTeam(1)
+              ->setAwayTeam(2)
+              ->startGame();
+        $response = $this->matchHandler->finishGame(123);
+
+        \assertEquals(false, $response[Constants::RESULT]);
+        \assertEquals(MatchHandler::ERROR_TEAM_MISSING, $response[Constants::MESSAGE]);
+    }
+
     public function testFinishGameFail1Ok()
     {
         $homeTeam = new Team();
@@ -211,4 +229,5 @@ class MatchHandlerTest
     }
 
     // TODO add test case for no match in progress,
+    // TODO test case for TEAM MISSING on FINISH or UPDATE (team gets deleted for whatever reason)
 }
